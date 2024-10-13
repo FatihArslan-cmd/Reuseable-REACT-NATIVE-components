@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Modal, View, StyleSheet, TouchableOpacity, Dimensions, TouchableWithoutFeedback, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { BlurView } from '@react-native-community/blur';
 
 const { width, height } = Dimensions.get('window');
 
@@ -10,15 +11,15 @@ const AlertComponent = ({
   message,
   onConfirm,
   confirmText,
-  cancelText = 'Cancel', // Optional cancel button text
-  onCancel, // Optional cancel button action
-  modalStyle = {}, // Allow custom styles
+  cancelText = 'Cancel',
+  onCancel,
+  modalStyle = {},
   confirmButtonStyle = {},
   cancelButtonStyle = {},
   confirmTextStyle = {fontSize:18},
   cancelTextStyle = {fontSize:18},
-  confirmGradientColors = ['#56ab2f', '#a8e063'], // Default confirm gradient colors
-  cancelGradientColors = ['#D31027', '#EA384D'],  // Default cancel gradient colors
+  confirmGradientColors = ['#56ab2f', '#a8e063'],
+  cancelGradientColors = ['#D31027', '#EA384D'],
 }) => {
 
   return (
@@ -26,10 +27,16 @@ const AlertComponent = ({
       animationType="fade"
       transparent={true}
       visible={visible}
-      onRequestClose={onCancel}
+      onRequestClose={onCancel} // Android back button için
     >
       <TouchableWithoutFeedback onPress={onCancel}>
         <View style={styles.centeredView}>
+          {/* Blur the background outside the modal */}
+          <BlurView
+            style={styles.absoluteBlur}
+            blurType="light"  // You can change this to "dark" or "extra light"
+            blurAmount={1}   // Adjust the blur amount to make it more intense
+          />
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={[styles.modalView, modalStyle]}>
               <Text style={[styles.modalTitle]}>{title}</Text>
@@ -37,7 +44,7 @@ const AlertComponent = ({
               <View style={styles.buttonContainer}>
                 {onCancel && (
                   <LinearGradient 
-                    colors={cancelGradientColors} // Customizable gradient colors for cancel button
+                    colors={cancelGradientColors}
                     start={{x: 0, y: 0}} 
                     end={{x: 1, y: 1}}
                     style={[styles.linearGradient, cancelButtonStyle, styles.buttonGap]}
@@ -53,7 +60,7 @@ const AlertComponent = ({
                   </LinearGradient>
                 )}
                 <LinearGradient 
-                  colors={confirmGradientColors} // Customizable gradient colors for confirm button
+                  colors={confirmGradientColors}
                   start={{x: 0, y: 0}} 
                   end={{x: 1, y: 1}}
                   style={[styles.linearGradient, confirmButtonStyle]}
@@ -81,7 +88,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     margin: 50,
@@ -126,11 +132,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonGap: {
-    marginRight: 15, // Gap between cancel and confirm buttons
+    marginRight: 15,
   },
   buttonText: {
     color: 'white',
     fontFamily: 'Poppins-Bold',
+  },
+  absoluteBlur: {
+    position: 'absolute',
+    width: width,
+    height: height,
   },
 });
 
