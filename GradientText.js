@@ -4,7 +4,15 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 
 // Reusable GradientText component
-const GradientText = ({ text, colors, start, end, textStyle, gradientStyle, backgroundColor }) => {
+const GradientText = ({
+  text = 'Colorful Text',            // Default text
+  colors = ['#FF6B6B', '#FFD93D'],   // Default gradient colors
+  start = { x: 0, y: 0 },            // Default gradient start point
+  end = { x: 1, y: 1 },              // Default gradient end point
+  textStyle = {},                    // Customizable text styles
+  gradientStyle = {},                // Customizable gradient styles
+  backgroundColor = '#fff'           // Default background color (white)
+}) => {
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <MaskedView
@@ -47,16 +55,5 @@ const styles = StyleSheet.create({
     width: 300,  // Default width for the gradient
   },
 });
-
-// Default props for optional usage
-GradientText.defaultProps = {
-  text: 'Colorful Text',             // Default text
-  colors: ['#FF6B6B', '#FFD93D'],    // Default gradient colors
-  start: { x: 0, y: 0 },             // Default gradient start point
-  end: { x: 1, y: 1 },               // Default gradient end point
-  textStyle: {},                     // Customizable text styles
-  gradientStyle: {},                 // Customizable gradient styles
-  backgroundColor: '#fff',           // Default background color (white)
-};
 
 export default GradientText;
