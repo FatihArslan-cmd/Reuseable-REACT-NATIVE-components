@@ -4,20 +4,34 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  interpolate,
 } from 'react-native-reanimated';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
 } from 'react-native-gesture-handler';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { BlurView } from '@react-native-community/blur';
 
 const BottomSheet = () => {
-  const bottomSheetHeight = useSharedValue(0); // Closed initially
-  const threshold = 50; // Threshold for drag distance in pixels
+  const bottomSheetHeight = useSharedValue(0);
+  const threshold = 50;
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       height: `${bottomSheetHeight.value * 100}%`,
+    };
+  });
+
+  const animatedBlurStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      bottomSheetHeight.value,
+      [0, 0.3],
+      [0, 1]
+    );
+    return {
+      opacity,
+      display: opacity === 0 ? 'none' : 'flex',
     };
   });
 
@@ -29,14 +43,12 @@ const BottomSheet = () => {
     const translationY = event.nativeEvent.translationY;
 
     if (translationY < 0) {
-      // Expand to 70% on upward drag
       bottomSheetHeight.value = withSpring(0.70);
     } else {
-      // Collapse to 25% or close based on current state with threshold
       if (bottomSheetHeight.value === 0.30 && translationY > threshold) {
-        bottomSheetHeight.value = withSpring(0); // Close the sheet
+        bottomSheetHeight.value = withSpring(0);
       } else {
-        bottomSheetHeight.value = withSpring(0.30); // Collapse to 25%
+        bottomSheetHeight.value = withSpring(0.30);
       }
     }
   }, []);
@@ -44,6 +56,16 @@ const BottomSheet = () => {
   return (
     <GestureHandlerRootView style={styles.container}>
       <Button title="Toggle Bottom Sheet" onPress={toggleSheet} />
+      
+      <Animated.View style={[styles.blurContainer, animatedBlurStyle]}>
+        <BlurView
+          style={styles.absolute}
+          blurType="light"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white"
+        />
+      </Animated.View>
+
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={[styles.bottomSheet, animatedStyle]}>
           <View style={styles.handleContainer}>
@@ -73,15 +95,31 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 15, // Adds shadow on Android
-    shadowColor: '#000', // Shadow on iOS
+    elevation: 15,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 2,
     shadowRadius: 4,
+    zIndex: 2, // Ensure bottom sheet is above blur
   },
   handleContainer: {
     width: '100%',
     alignItems: 'center',
     marginBottom: 'auto'
+  },
+  blurContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1, // Below bottom sheet
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 });
