@@ -1,28 +1,79 @@
-import React from 'react';
-import { Button, Alert } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Alert, StyleSheet, View, ActivityIndicator } from 'react-native';
 import ReactNativeBiometrics from 'react-native-biometrics';
 
-const BiometricButton = () => {
-  const handleBiometricAuth = () => {
-    const rnBiometrics = new ReactNativeBiometrics();
+const FingerprintButton = ({ onAuthSuccess, onAuthError }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFingerPrintAvailable, setIsFingerPrintAvailable] = useState(false);
+  
+  const rnBiometrics = new ReactNativeBiometrics();
 
-    rnBiometrics
-      .simplePrompt({ promptMessage: 'Authenticate with Biometrics' })
-      .then(resultObject => {
-        const { success } = resultObject;
+  useEffect(() => {
+    checkFingerprintAvailability();
+  }, []);
 
-        if (success) {
-          Alert.alert('Authenticated successfully!');
-        } else {
-          Alert.alert('Authentication failed');
-        }
-      })
-      .catch(() => {
-        Alert.alert('Biometrics not available');
-      });
+  const checkFingerprintAvailability = async () => {
+    try {
+      const { available } = await rnBiometrics.isSensorAvailable();
+      setIsFingerPrintAvailable(available);
+    } catch (error) {
+      console.error('Error checking fingerprint sensor:', error);
+      setIsFingerPrintAvailable(false);
+    }
   };
 
-  return <Button title="Authenticate with Fingerprint" onPress={handleBiometricAuth} />;
+  const handleFingerprintAuth = useCallback(async () => {
+    if (!isFingerPrintAvailable) {
+      Alert.alert(
+        'Fingerprint Unavailable',
+        'Fingerprint authentication is not available on your device.'
+      );
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { success } = await rnBiometrics.simplePrompt({
+        promptMessage: 'Authenticate with Fingerprint',
+        cancelButtonText: 'Cancel',
+      });
+
+      if (success) {
+        onAuthSuccess?.();
+        Alert.alert('Success', 'Fingerprint authentication successful!');
+      } else {
+        onAuthError?.('User cancelled fingerprint authentication');
+        Alert.alert('Failed', 'Fingerprint authentication failed.');
+      }
+    } catch (error) {
+      console.error('Fingerprint authentication error:', error);
+      onAuthError?.(error);
+      Alert.alert('Error', 'An error occurred during fingerprint authentication.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isFingerPrintAvailable, onAuthSuccess, onAuthError]);
+
+  return (
+    <View style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <Button
+          title="Authenticate with Fingerprint"
+          onPress={handleFingerprintAuth}
+          disabled={!isFingerPrintAvailable || isLoading}
+        />
+      )}
+    </View>
+  );
 };
 
-export default BiometricButton;
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    alignItems: 'center',
+  },
+});
+
+export default FingerprintButton;
