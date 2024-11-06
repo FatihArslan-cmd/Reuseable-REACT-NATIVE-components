@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
     padding: 16,
     alignItems: 'center',
-    bottom: -SCREEN_HEIGHT + 30,
+    bottom: -SCREEN_HEIGHT + 0,
     elevation: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
