@@ -1,5 +1,7 @@
 package com.nativecomponents
 
+package com.nativecomponents
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -7,7 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import android.graphics.Color
+import android.graphics.Color  // <-- Add this import
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -77,3 +79,4 @@ class PushNotificationModule(private val reactContext: ReactApplicationContext) 
         promise.resolve("Notification sent!")
     }
 }
+
