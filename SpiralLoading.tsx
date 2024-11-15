@@ -3,13 +3,13 @@ import { View, Dimensions } from 'react-native';
 import {
   Canvas,
   Path,
+  vec,
   Group,
   usePathValue,
   SweepGradient,
   BlurMask,
 } from '@shopify/react-native-skia';
 import { useSharedValue, useDerivedValue, withTiming, interpolate, Extrapolate } from 'react-native-reanimated';
-import { vec } from '@shopify/react-native-skia';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
