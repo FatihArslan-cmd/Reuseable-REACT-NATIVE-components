@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/widget_background">
+
+    <!-- İç içe CardView benzeri efekt -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="#FFFFFF"
+        android:elevation="4dp">
+
+        <!-- Widget İkonu -->
+        <ImageView
+            android:id="@+id/widget_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:src="@android:drawable/ic_dialog_info"
+            android:tint="#2196F3" />
+
+        <!-- Ana Metin -->
+        <TextView
+            android:id="@+id/widget_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Widget Başlığı"
+            android:textSize="18sp"
+            android:textColor="#212121"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.02"
+            android:textAlignment="center" />
+
+        <!-- Alt Bilgi Metni -->
+        <TextView
+            android:id="@+id/widget_subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:text="Alt bilgi metni"
+            android:textSize="14sp"
+            android:textColor="#757575"
+            android:fontFamily="sans-serif" />
+
+        <!-- İlerleme Göstergesi -->
+        <ProgressBar
+            android:id="@+id/widget_progress"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="12dp"
+            android:progress="50" />
+
+        <!-- Aksiyon Butonları -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/widget_action_1"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/button_background"
+                android:textColor="#FFFFFF"
+                android:text="Güncelle"
+                android:textSize="14sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+
+            <Button
+                android:id="@+id/widget_action_2"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="@drawable/button_background_secondary"
+                android:textColor="#2196F3"
+                android:text="Detaylar"
+                android:textSize="14sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
